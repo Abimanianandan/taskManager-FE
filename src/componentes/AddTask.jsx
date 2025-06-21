@@ -9,7 +9,8 @@ const AddTask = () => {
     const [newTask,setNewTask] = useState({
             name:"",
             taskname:"",
-            description:""
+            description:"",
+            deadline:""
         })
     const navigate = useNavigate();
            const handleSubmit = async(e) =>{
@@ -18,7 +19,7 @@ const AddTask = () => {
                       const res = await axios.post("https://task-manager-be-g036.onrender.com/api/task/create",newTask)
                       alert("task created successfully")              
                       setTask(res.data.tasks)
-                      setNewTask({name:"",taskname:"",description:""})
+                      setNewTask({name:"",taskname:"",description:"",deadline:""})
                       navigate("/admin")
                       window.location.reload()
                 } catch (error) {
@@ -71,6 +72,17 @@ const AddTask = () => {
               placeholder="Description"
               name="description"
               value={newTask.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+           <div className="col-sm-auto mt-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Deadline"
+              name="deadline"
+              value={newTask.deadline}
               onChange={handleChange}
               required
             />

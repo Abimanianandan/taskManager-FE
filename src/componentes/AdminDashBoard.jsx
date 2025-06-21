@@ -47,7 +47,9 @@ const AdminDashBoard = () => {
       <div className="container mt-5">
         <div className="row row-cols-1 row-cols-md-3 g-4">
           {task.length === 0 && (
-            <p className="text-center text-muted">No tasks found for status: {filter}</p>
+            <p className="text-center text-muted">
+              No tasks found for status: {filter}
+            </p>
           )}
           {task.map((item, index) => (
             <div className="col d-flex" key={index}>
@@ -55,14 +57,39 @@ const AdminDashBoard = () => {
                 <div className="card-body text-center">
                   <h5 className="card-title fw-bold">Name: {item.name}</h5>
                   <ol className="text-secondary text-start">
-                    <li><b className="text-dark">TaskName:</b> {item.taskname}</li>
-                    <li><b className="text-dark">Description:</b> {item.description}</li>
-                    <li><b className="text-dark">Status:</b> {item.status}</li>
-                    <li><b className="text-dark">Date & Time:</b> {new Date(item.updatedAt).toLocaleString()}</li>
+                    <li>
+                      <b className="text-dark">TaskName:</b> {item.taskname}
+                    </li>
+                    <li>
+                      <b className="text-dark">Description:</b>{" "}
+                      {item.description}
+                    </li>
+                    <li>
+                      <b className="text-dark">Status:</b> {item.status}
+                    </li>
+                    <li>
+                      <b className="text-dark">Start Date:</b>{" "}
+                      {item.updatedAt ?? "N/A"}
+                    </li>
+                     {/* <li>
+                      <b className="text-dark">End Date:</b>{" "}
+                      {item.deadline && !isNaN(new Date(item.deadline))
+                        ? new Date(item.deadline).toLocaleDateString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                          })
+                        : "N/A"}
+                    </li> */}
                   </ol>
                   <div className="d-flex gap-3">
-                    <Link to={`/${item._id}`} className="btn btn-success">Edit</Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(item._id)}>Delete</button>
+                    <Link to={`/${item._id}`} className="btn btn-success">
+                      Edit
+                    </Link>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
