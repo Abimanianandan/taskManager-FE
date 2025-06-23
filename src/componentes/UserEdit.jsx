@@ -11,7 +11,8 @@ const UserEdit = () => {
             name:"",
             taskname:"",
             description:"",
-            status:""
+            status:"",
+            subtask:""
         })
     const navigate = useNavigate();
     useEffect(()=>{
@@ -19,7 +20,7 @@ const UserEdit = () => {
     },[])
          const getData = async ()=>{
             try {
-                const res = await axios.get(`https://task-manager-be-g036.onrender.com/api/task/${id}`)
+                const res = await axios.get(`http://localhost:4000/api/task/${id}`)
                 setEditTask(res.data.task)
             } catch (error) {
                 console.log(error.message);
@@ -28,10 +29,10 @@ const UserEdit = () => {
            const handleSubmit = async(e) =>{
                 e.preventDefault()
                 try {
-                      const res = await axios.put(`https://task-manager-be-g036.onrender.com/api/task/${id}`,editTask)
+                      const res = await axios.put(`http://localhost:4000/api/task/${id}`,editTask)
                       alert("task update successfully")              
                       setTask(res.data.tasks)
-                      setEditTask({name:"",taskname:"",description:"",status:""})
+                      setEditTask({name:"",taskname:"",description:"",status:"",subtask:""})
                       navigate("/user")
                       window.location.reload()
                 } catch (error) {
@@ -55,6 +56,17 @@ const UserEdit = () => {
             Edit task
           </h5>
            {error && <div className="error text-danger d-flex justify-content-center">{error}</div>}
+           <div className="col-sm-auto mt-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="SubTask"
+              name="subtask"
+              value={editTask.subtask}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="col-sm-auto mt-3">
             <input
               type="text"

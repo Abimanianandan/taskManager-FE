@@ -12,7 +12,7 @@ const Register = () => {
            const handleSubmit = async(e) =>{
                 e.preventDefault()
                 try {
-                      const res = await axios.post("https://task-manager-be-g036.onrender.com/api/user/register",newUser)
+                      const res = await axios.post("http://localhost:4000/api/user/register",newUser)
                       alert("user created successfully")              
                       setUsers(res.data.users)
                       setNewUser({name:"",password:""})

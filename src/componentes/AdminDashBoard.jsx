@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import React, { useContext, useEffect } from 'react';
 import { taskContext } from '../App';
@@ -6,6 +7,7 @@ import Navbar from './Navbar';
 
 const AdminDashBoard = () => {
   const { task, setTask, filter } = useContext(taskContext);
+console.log(task);
 
   useEffect(() => {
     fetchData();
@@ -14,18 +16,15 @@ const AdminDashBoard = () => {
   const fetchData = async () => {
     try {
       const query = {};
-
       if (filter.toLowerCase() !== "all") {
         query.status = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
       }
-
-      console.log("Filter query being sent:", query);
-
-      const res = await axios.get("https://task-manager-be-g036.onrender.com/api/task/allTask", {
+      const res = await axios.get("http://localhost:4000/api/task/allTask", {
         params: query
       });
-
-      setTask(res.data.tasks);
+      setTask(res.data.formattedTasks);
+      console.log(res.data);
+      
     } catch (error) {
       console.log(error.message);
     }
@@ -33,7 +32,7 @@ const AdminDashBoard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://task-manager-be-g036.onrender.com/api/task/${id}`);
+      await axios.delete(`http://localhost:4000/api/task/${id}`);
       alert('Task deleted successfully');
       fetchData();
     } catch (error) {
@@ -45,60 +44,110 @@ const AdminDashBoard = () => {
     <>
       <Navbar />
       <div className="container mt-5">
-        <div className="row row-cols-1 row-cols-md-3 g-4">
-          {task.length === 0 && (
-            <p className="text-center text-muted">
-              No tasks found for status: {filter}
-            </p>
-          )}
-          {task.map((item, index) => (
-            <div className="col d-flex" key={index}>
-              <div className="card shadow p-4 mb-5 bg-body-tertiary rounded-4 w-100">
-                <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">Name: {item.name}</h5>
-                  <ol className="text-secondary text-start">
-                    <li>
-                      <b className="text-dark">TaskName:</b> {item.taskname}
-                    </li>
-                    <li>
-                      <b className="text-dark">Description:</b>{" "}
-                      {item.description}
-                    </li>
-                    <li>
-                      <b className="text-dark">Status:</b> {item.status}
-                    </li>
-                    <li>
-                      <b className="text-dark">Start Date:</b>{" "}
-                      {item.updatedAt ?? "N/A"}
-                    </li>
-                     {/* <li>
-                      <b className="text-dark">End Date:</b>{" "}
+          {/* <div className="table-responsive">
+            <table className="table table-bordered table-hover text-center pointer">
+              <thead className="table-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>TaskName</th>
+                  <th>Description</th>
+                  <th>Sub Task</th>
+                  <th>Status</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {task.map((item, index) => (
+                  
+                  <tr key={item._id}>
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.taskname}</td>
+                    <td>{item.description}</td>
+                     <td>{item.subtask === "N/A" ? "—" : item.subtask}</td>
+                    <td>{item.status}</td>
+                    <td>
+                       {item.updatedAt ?? "N/A"}
+                    </td>
+                    <td>
                       {item.deadline && !isNaN(new Date(item.deadline))
                         ? new Date(item.deadline).toLocaleDateString("en-IN", {
                             timeZone: "Asia/Kolkata",
                           })
                         : "N/A"}
-                    </li> */}
-                  </ol>
-                  <div className="d-flex gap-3">
-                    <Link to={`/${item._id}`} className="btn btn-success">
-                      Edit
-                    </Link>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(item._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                    </td>
+                    <td>
+                      <Link to={`/${item._id}`} className="btn btn-success btn-sm me-2">
+                        Edit
+                      </Link>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div> */}
+          {Array.isArray(task) && task.length > 0 ? (
+  <div className="table-responsive">
+    <table className="table table-bordered table-hover text-center pointer">
+      <thead className="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Task Name</th>
+          <th>Description</th>
+          <th>Sub Task</th>
+          <th>Status</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {task.map((item, index) => (
+          <tr key={item._id}>
+            <td>{index + 1}</td>
+            <td>{item.name}</td>
+            <td>{item.taskname}</td>
+            <td>{item.description}</td>
+            <td>{item.subtask === "N/A" ? "—" : item.subtask}</td>
+            <td>{item.status}</td>
+            <td>{item.createdAt ?? "N/A"}</td>
+            <td>{item.deadline}</td>
+            <td>
+              <Link to={`/${item._id}`} className="btn btn-success btn-sm me-2">
+                Edit
+              </Link>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDelete(item._id)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <p className="text-center text-muted">
+    {Array.isArray(task) ? `No tasks found for status: ${filter}` : "Loading tasks..."}
+  </p>
+)}
+
       </div>
     </>
   );
 };
 
 export default AdminDashBoard;
+

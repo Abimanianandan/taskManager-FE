@@ -10,7 +10,10 @@ const EditTask = () => {
     const [editTask,setEditTask] = useState({
             name:"",
             taskname:"",
-            description:""
+            description:"",
+            subtask:"",
+            status:"",
+            deadline:""
         })
     const navigate = useNavigate();
     useEffect(()=>{
@@ -18,7 +21,7 @@ const EditTask = () => {
     },[])
          const getData = async ()=>{
             try {
-                const res = await axios.get(`https://task-manager-be-g036.onrender.com/api/task/${id}`)
+                const res = await axios.get(`http://localhost:4000/api/task/${id}`)
                 setEditTask(res.data.task)
             } catch (error) {
                 console.log(error.message);
@@ -27,10 +30,10 @@ const EditTask = () => {
            const handleSubmit = async(e) =>{
                 e.preventDefault()
                 try {
-                      const res = await axios.put(`https://task-manager-be-g036.onrender.com/api/task/${id}`,editTask)
+                      const res = await axios.put(`http://localhost:4000/api/task/${id}`,editTask)
                       alert("task update successfully")              
                       setTask(res.data.tasks)
-                      setEditTask({name:"",taskname:"",description:""})
+                      setEditTask({name:"",taskname:"",description:"",subtask:"",status:"",deadline:""})
                       navigate("/admin")
                       window.location.reload()
                 } catch (error) {
@@ -83,6 +86,39 @@ const EditTask = () => {
               placeholder="Description"
               name="description"
               value={editTask.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="col-sm-auto mt-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Subtask"
+              name="subtask"
+              value={editTask.subtask}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="col-sm-auto mt-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="status"
+              name="status"
+              value={editTask.status}
+              onChange={handleChange}
+              required
+            />
+          </div>
+           <div className="col-sm-auto mt-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Deadline"
+              name="deadline"
+              value={editTask.deadline}
               onChange={handleChange}
               required
             />
