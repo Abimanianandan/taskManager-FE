@@ -13,26 +13,60 @@ console.log(task);
     fetchData();
   }, [filter]);
 
-  const fetchData = async () => {
-    try {
-      const query = {};
-      if (filter.toLowerCase() !== "all") {
-        query.status = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
-      }
-      const res = await axios.get("http://localhost:4000/api/task/allTask", {
-        params: query
-      });
-      setTask(res.data.formattedTasks);
-      console.log(res.data);
+  // const fetchData = async () => {
+  //   try {
+  //     const query = {};
+  //     if (filter.toLowerCase() !== "all") {
+  //       query.status = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
+  //     }
+  //     const res = await axios.get("http://localhost:4000/api/task/allTask", {
+  //       params: query
+  //     });
+  //     setTask(res.data.formattedTasks);
+  //     console.log(res.data);
       
-    } catch (error) {
-      console.log(error.message);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  const fetchData = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("Fetched Token from LocalStorage:", token);
+
+    if (!token) {
+      alert("Token not found. Please log in again.");
+      return;
     }
-  };
+
+    const query = {};
+    if (filter.toLowerCase() !== "all") {
+      query.status = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
+    }
+
+    const res = await axios.get("http://localhost:4000/api/task/allTask", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: query,
+    });
+
+    console.log("API Response:", res.data);
+    setTask(res.data.formattedTasks);
+  } catch (error) {
+    console.error("Fetch error:", error.response?.data || error.message);
+  }
+};
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/task/${id}`);
+        const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:4000/api/task/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
       alert('Task deleted successfully');
       fetchData();
     } catch (error) {

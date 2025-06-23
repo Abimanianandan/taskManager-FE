@@ -14,22 +14,41 @@ const AddTask = () => {
             deadline:""
         })
     const navigate = useNavigate();
-           const handleSubmit = async(e) =>{
-                e.preventDefault()
-                try {
-                      const res = await axios.post("http://localhost:4000/api/task/create",newTask)
-                      alert("task created successfully") 
-                      setTask(res.data.tasks)
-                       console.log(task); 
-                      setNewTask({name:"",taskname:"",description:"",deadline:"",subtask:""})
-                      navigate("/admin")
-                      window.location.reload()
-                } catch (error) {
-                     setError(
-                          error.response ? error.response.data.message : "An error occurred"
-                     ); 
-                }
-            }
+         const handleSubmit = async (e) => {
+           e.preventDefault();
+           try {
+             const token = localStorage.getItem("token");
+
+             const res = await axios.post(
+               "http://localhost:4000/api/task/create",
+               newTask,
+               {
+                 headers: {
+                   Authorization: `Bearer ${token}`,
+                 },
+               }
+             );
+
+             alert("Task created successfully");
+             setTask(res.data.tasks);
+             setNewTask({
+               name: "",
+               taskname: "",
+               description: "",
+               deadline: "",
+               subtask: "",
+             });
+             navigate("/admin");
+             window.location.reload();
+           } catch (error) {
+             setError(
+               error.response
+                 ? error.response.data.message
+                 : "An error occurred"
+             );
+           }
+         };
+
             const handleChange = (e) =>{
                const{name,value} = e.target;
                setNewTask((preData)=>({...preData,[name]:value}))

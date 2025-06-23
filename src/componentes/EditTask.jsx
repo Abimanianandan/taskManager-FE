@@ -30,7 +30,11 @@ const EditTask = () => {
            const handleSubmit = async(e) =>{
                 e.preventDefault()
                 try {
-                      const res = await axios.put(`http://localhost:4000/api/task/${id}`,editTask)
+                      const res = await axios.put(`http://localhost:4000/api/task/${id}`,editTask, {
+                 headers: {
+                   Authorization: `Bearer ${token}`,
+                 },
+               })
                       alert("task update successfully")              
                       setTask(res.data.tasks)
                       setEditTask({name:"",taskname:"",description:"",subtask:"",status:"",deadline:""})
