@@ -93,7 +93,7 @@ const UserDashBoard = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/task/allTask");
-      setTask(res.data.tasks);
+      setTask(res.data.formattedTasks);
     } catch (error) {
       console.log(error.message);
     }
@@ -115,7 +115,8 @@ console.log(task);
                 <th>Description</th>
                 <th>Sub Task</th>
                 <th>Status</th>
-                <th>Date & Time</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -139,6 +140,7 @@ console.log(task);
                   <td>
                     {item.updatedAt ?? "N/A"}
                   </td>
+                  <td>{item.deadline}</td>
                   <td>
                     <Link
                       className="btn btn-sm btn-success"
